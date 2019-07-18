@@ -1,199 +1,170 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { Carousel, Flex } from '@ant-design/react-native';
+import { getRankingList } from '../api'
 
-import { MonoText } from '../components/StyledText';
+export default class BasicCarouselExample extends React.Component {
 
-export default function HomeScreen() {
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
+  state = {
+    actions: [
+      {url: '', icon: require('../assets/images/ico-1.png'), id: 1},
+      {url: '', icon: require('../assets/images/ico-2.png'), id: 2},
+      {url: '', icon: require('../assets/images/ico-3.png'), id: 3},
+      {url: '', icon: require('../assets/images/ico-4.png'), id: 4},
+    ],
+    books: []
+  }
+  
+  onHorizontalSelectedIndexChange(index) {
+    /* tslint:disable: no-console */
+    // console.log('horizontal change to', index);
+  }
+  onVerticalSelectedIndexChange(index) {
+    /* tslint:disable: no-console */
+    // console.log('vertical change to', index);
+  }
+
+  componentDidMount() {
+    // simulate img loading
+    setTimeout(() => {
+      this.setState({
+        data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
+      });
+    }, 100);
+    this.orderBooks()
+  }
+  async orderBooks () {
+    let result = await getRankingList('54d42d92321052167dfb75e3');
+    let { books } = result.data.ranking
+    this.setState({
+      books: books.slice(0, 6)
+    })
+  }
+
+  render() {
+    return (
+      <View>
+        <View>
+          <Carousel
+            style={styles.wrapper}
+            selectedIndex={2}
+            autoplay
+            infinite
+            afterChange={this.onHorizontalSelectedIndexChange}
+          >
+            <View
+              style={[styles.containerHorizontal, { backgroundColor: 'red' }]}
+            >
+              <Text>Carousel 1</Text>
+            </View>
+            <View
+              style={[styles.containerHorizontal, { backgroundColor: 'blue' }]}
+            >
+              <Text>Carousel 2</Text>
+            </View>
+            <View
+              style={[
+                styles.containerHorizontal,
+                { backgroundColor: 'yellow' },
+              ]}
+            >
+              <Text>Carousel 3</Text>
+            </View>
+          </Carousel>
         </View>
+        <View>
+          <Flex align="center" justify="center" style={styles.iconsBox}>
+            {this.state.actions.map(val => (
+              <Flex.Item style={styles.iconsItems}>
+                        <Image source={val.icon} key={val.id} style={styles.iconsImg} />
+              </Flex.Item>
+            ))}
 
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-
-          <Text style={styles.getStartedText}>Get started by opening</Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
+          </Flex>        
+        </View>
+        <View>
+          <View style={styles.recommendBox}>
+            <View style={styles.recommend}></View>
+            <View><Text style={styles.recommendTitle}>推荐小说</Text></View>
           </View>
-
-          <Text style={styles.getStartedText}>
-            123333
-            Change this text and your app will automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              自动热加载 are you ok?!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
+          <View style={styles.bookList}>
+            {
+                this.state.books.map((k, i) => {
+                  var src = unescape(k.cover)
+                  src = src.slice(7, src.length)
+                  return (
+                    <View style={styles.bookBox} key={i}>
+                      <Image source={src}></Image>
+                      <Text>{k.title}</Text>
+                      <Text>{k.author}</Text>
+                      </View>
+                  )
+                })
+              }
+          </View>
         </View>
       </View>
-    </View>
-  );
-}
-
-HomeScreen.navigationOptions = {
-  header: null,
-};
-
-function DevelopmentModeNotice() {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
-
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use
-        useful development tools. {learnMoreButton}
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
     );
   }
 }
-
-function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/development-mode/'
-  );
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
-  );
-}
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  wrapper: {
     backgroundColor: '#fff',
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
+  containerHorizontal: {
+    
+    flexGrow: 1,
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
+    justifyContent: 'center',
+    height: 150,
   },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
+  containerVertical: {
+    flexGrow: 1,
     alignItems: 'center',
-    marginHorizontal: 50,
+    justifyContent: 'center',
+    height: 150,
   },
-  homeScreenFilename: {
-    marginVertical: 7,
+  text: {
+    color: '#fff',
+    fontSize: 36,
   },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
+  iconsBox: {
+    height: 80
   },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
+  iconsItems: {
+    textAlign: "center",
+    flexGrow: 1,
     alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
+    justifyContent: 'center',
   },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
+  iconsImg: {
+    width: 50,
+    height: 50
   },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
+  recommendBox: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  helpLink: {
-    paddingVertical: 15,
+  recommend: {
+    backgroundColor: '#1da57a',
+    width: 4,
+    height: 30,
+    borderRadius: 2,
+    marginLeft: 10
   },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+  recommendTitle: {
+    paddingLeft: 10,
+    flex: 1,
+    justifyContent: 'center',
   },
+  bookList: {
+    flex: 1,
+    flexWrap: "wrap",
+    flexDirection: 'row',
+  },
+  bookBox: {
+    width: "33%"
+  }
 });

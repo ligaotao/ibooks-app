@@ -8,13 +8,36 @@
     "eject": "expo eject",
     "test": "jest --watchAll"
   },
+  "proxy": {
+    "/book/*": {
+      "target": "http://api.zhuishushenqi.com/"
+    },
+    "/cats/*": {
+      "target": "http://api.zhuishushenqi.com/"
+    },
+    "/btoc/*": {
+      "target": "http://api.zhuishushenqi.com/"
+    },
+    "/atoc/*": {
+      "target": "http://api.zhuishushenqi.com/"
+    },
+    "/ranking/*": {
+      "target": "http://api.zhuishushenqi.com/"
+    },
+    "/chapter/*": {
+      "changeOrigin": true,
+      "target": "http://chapterup.zhuishushenqi.com/"
+    }
+  },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@ant-design/react-native": "^3.1.10",
     "@expo/samples": "~3.0.0",
     "@expo/vector-icons": "^10.0.1",
     "@react-navigation/web": "^1.0.0-alpha.9",
+    "axios": "^0.19.0",
     "expo": "^33.0.0",
     "expo-asset": "^5.0.0",
     "expo-constants": "^5.0.0",
