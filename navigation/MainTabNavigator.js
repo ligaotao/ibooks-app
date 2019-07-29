@@ -8,8 +8,8 @@ import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const config = Platform.select({
-  web: { headerMode: 'screen' },
-  default: {},
+  web: { headerMode: 'none' },
+  default: {headerMode: 'none',},
 });
 
 const HomeStack = createStackNavigator(
@@ -18,6 +18,7 @@ const HomeStack = createStackNavigator(
   },
   config
 );
+
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',

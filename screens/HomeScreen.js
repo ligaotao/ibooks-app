@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import { Carousel, Flex } from '@ant-design/react-native';
 import { getRankingList } from '../api'
 
@@ -43,7 +43,7 @@ export default class BasicCarouselExample extends React.Component {
 
   render() {
     return (
-      <View>
+      <ScrollView style={styles.Box}>
         <View>
           <Carousel
             style={styles.wrapper}
@@ -75,8 +75,8 @@ export default class BasicCarouselExample extends React.Component {
         <View>
           <Flex align="center" justify="center" style={styles.iconsBox}>
             {this.state.actions.map(val => (
-              <Flex.Item style={styles.iconsItems}>
-                        <Image source={val.icon} key={val.id} style={styles.iconsImg} />
+              <Flex.Item style={styles.iconsItems} key={val.id}>
+                        <Image source={val.icon} style={styles.iconsImg} />
               </Flex.Item>
             ))}
 
@@ -94,25 +94,28 @@ export default class BasicCarouselExample extends React.Component {
                   src = src.slice(7, src.length)
                   return (
                     <View style={styles.bookBox} key={i}>
-                      <Image source={src}></Image>
+                      <Image source={{uri: src}} style={styles.bookImg} key={i} />
                       <Text>{k.title}</Text>
-                      <Text>{k.author}</Text>
+                      <Text style={styles.bookAuthor}>{k.author}</Text>
                       </View>
                   )
                 })
               }
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
 const styles = StyleSheet.create({
+  Box: {
+    flex: 1,
+    overflow: 'scroll'
+  },
   wrapper: {
     backgroundColor: '#fff',
   },
   containerHorizontal: {
-    
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -142,7 +145,6 @@ const styles = StyleSheet.create({
     height: 50
   },
   recommendBox: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -165,6 +167,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bookBox: {
-    width: "33%"
+    width: "33%",
+    padding: 10
+  },
+  bookAuthor: {
+    fontSize: 12,
+    color: '#ccc',
+  },
+  bookImg: {
+    height: 150
   }
 });

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-    // baseURL: 'http://ibooks.ligaotao.cn/'
+    baseURL: 'http://api.ligaotao.cn/'
 })
 
 export const getClassify = function () {
