@@ -5,20 +5,32 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
+
 import SettingsScreen from '../screens/SettingsScreen';
 
 const config = Platform.select({
-  web: { headerMode: 'none' },
-  default: {headerMode: 'none',},
+  web: { 
+    headerMode: 'screen'
+  },
+  default: {
+    headerMode: 'screen',
+    // 导航栏默认属性
+    defaultNavigationOptions: {
+      headerStyle: {
+        height: 50
+      }
+    }
+  },
 });
 
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Home: { 
+      screen: HomeScreen
+    },
   },
   config
 );
-
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
@@ -71,7 +83,7 @@ SettingsStack.path = '';
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   LinksStack,
-  SettingsStack,
+  SettingsStack
 });
 
 tabNavigator.path = '';

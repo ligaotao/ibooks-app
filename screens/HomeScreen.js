@@ -1,9 +1,39 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
-import { Carousel, Flex } from '@ant-design/react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Carousel, Flex, Icon } from '@ant-design/react-native';
 import { getRankingList } from '../api'
+import LogoTitle  from "../components/Title";
 
 export default class BasicCarouselExample extends React.Component {
+
+  goSearch () {
+    console.log(this)
+  }
+
+  static navigationOptions = ({navigation }) => {
+    let goSearch = function (params) {
+      navigation.navigate('detail', {
+        name:'marongting',
+        callBack:(backdata)=>{
+          Alert.alert(backdata);
+        }
+      })
+    };
+    return {
+      headerLeft: <LogoTitle />,
+      headerStyle: {
+        backgroundColor: '#fff',
+        height: 50,
+        boxShadow: 'none',
+      },
+      headerRight: (
+        <TouchableOpacity>
+          <Icon name="search" size="md" color="rgb(29,165,122)" onPress={goSearch} />
+        </TouchableOpacity>
+      )
+    }
+  }
+
 
   state = {
     actions: [
