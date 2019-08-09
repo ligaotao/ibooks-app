@@ -20,7 +20,7 @@ class App extends React.Component {
         src = src.slice(7, src.length)
         return (
             <View key={book._id} style={styles.box} >
-                <Image source={{src}} style={styles.boxImage}  />
+                <Image source={{uri: src}} style={styles.boxImage}  />
                 <View style={styles.content}>
                 <Text style={styles.title}>{book.title}</Text>
                 <Text style={styles.author}>{book.author}</Text>
@@ -37,18 +37,22 @@ export default App;
 
 const styles = StyleSheet.create({
     box: {
-        height: 100,
-        marginBottom: 20,
-        marginTop: 20,
+        height: 150,
         borderBottomColor: '#000',
-        borderBottomWidth: 1
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderBottomWidth: 1,
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     boxImage: {
-        width: 250,
-        height: 380,
+        width: 80,
+        height: 130,
     },
     title: {
-        color: '#333',
+        color: '#000',
         fontSize: 14,
     },
     author: {
@@ -56,9 +60,8 @@ const styles = StyleSheet.create({
         color: '#333'
     },
     meta: {
-        height: 210,
+        height: 100,
         overflow: 'hidden',
-        width: 650,
     },
     content: {
         paddingLeft: 20,

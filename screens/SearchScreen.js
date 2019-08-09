@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView, FlatList} from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, FlatList, Dimensions} from 'react-native';
 import { Carousel, Flex, Icon, SearchBar } from '@ant-design/react-native';
 import { getKeyWords, getSearchBooks } from '../api'
 import BookBox  from "../components/BookBox";
@@ -19,10 +19,6 @@ export default class BasicCarouselExample extends React.Component {
     value: '',
     keyWords: [],
     books: [],
-  }
-  
-
-  componentDidMount() {
   }
 
   clear () {
@@ -80,7 +76,7 @@ export default class BasicCarouselExample extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.Box}>
           <SearchBar
             value={this.state.value}
             placeholder="输入书名进行搜索"
@@ -88,14 +84,18 @@ export default class BasicCarouselExample extends React.Component {
             onChange={this.valueChange.bind(this)}
             showCancelButton
           />
-          <View style={styles.searchBox}>
-            <ScrollView style={styles.bookList}>
+          <View style={[styles.Box, styles.searchBox]}>
+
+          <ScrollView style={styles.bookList}>
               <FlatList
                 data={this.state.books}
                 renderItem={({item}) => <BookBox book={item}></BookBox> }
               />
             </ScrollView>
+
             <FlatList
+              // 这个属性是用来设置点击两次才会提交的bug
+              keyboardShouldPersistTaps="always"
               style={styles.keyWords}
               data={this.state.keyWords}
               renderItem={({item}) => <View style={styles.item}><Text onPress={this.liClick.bind(this, item.key)}>{item.key}</Text></View> }
@@ -116,16 +116,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center'
   },
-  searchBox: {
-    position: 'relative',
+  Box: {
     flex: 1,
-    backgroundColor: 'red'
+    backgroundColor: '#fff'
+  },
+  searchBox: {
+    position: 'relative'
   },
   keyWords: {
+    zIndex: 99,
+    width: Dimensions.get('window').width,
     position: 'absolute',
-    zIndex: 99
+    backgroundColor: '#fff'
   },
   bookList: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
   }
 });
